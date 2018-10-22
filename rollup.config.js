@@ -35,7 +35,7 @@ export default {
     commonjs({
       include: 'node_modules/**',
       namedExports: {
-        'node_modules/react-is/index.js': ['isElement', 'isValidElementType', 'ForwardRef'],
+        'node_modules/react-is/index.js': ['isElement', 'isValidElementType', 'ForwardRef', 'injectGlobal'],
         'node_modules/js-sha3/src/sha3.js': ['keccak256']
       }      
     })

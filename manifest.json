@@ -1,0 +1,8 @@
+{
+  "name": "Aragon Comments",
+  "description": "Add comment threads to any Aragon app",
+  "icons": [{
+    "src": "images/icon.png",
+    "sizes": "22x22"
+  }]
+}

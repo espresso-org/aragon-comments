@@ -1,0 +1,12 @@
+{
+  "appName": "aragon-comments.aragonpm.eth",
+  "version": "0.0.1",
+  "roles": [
+    {
+      "name": "Can add comments",
+      "id": "COMMENT_ROLE",
+      "params": []
+    }
+  ],
+  "path": "contracts/AragonComments.sol"
+}
