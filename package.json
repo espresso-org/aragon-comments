@@ -1,5 +1,5 @@
 {
-  "name": "aragon-comments",
+  "name": "@espresso-org/aragon-comments",
   "version": "1.0.0",
   "description": "Add comments feature to any Aragon app",
   "license": "MIT",

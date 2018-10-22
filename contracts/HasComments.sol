@@ -9,11 +9,7 @@ contract HasComments {
 
     event SetAragonComments(address indexed entity);
 
-    AragonComments private aragonComments;
-
-    function getAragonCommentsApp() public returns (AragonComments) {
-        return aragonComments;
-    }
+    AragonComments public aragonComments;
 
     function acl() external view returns (address) {
         return kernel().acl();
@@ -25,7 +21,10 @@ contract HasComments {
     }    
          
 
-    function postComment(string comment) public;
+    function postComment(string comment) public {
+        aragonComments.postComment(comment, msg.sender);
+    }
+
     function kernel() public view returns (IKernel);
 
 }

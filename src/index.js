@@ -33,8 +33,7 @@ export class CommentThread extends React.Component {
     }
 
     initializeContract = async () => {
-        console.log('Initialize contract')
-        const savedContractAddr = await observableToPromise(this.props.aragonApp.call('getAragonCommentsApp'))
+        const savedContractAddr = await observableToPromise(this.props.aragonApp.call('aragonComments'))
         if (savedContractAddr !== EMPTY_ADDRESS) {
             this.contract = this.props.aragonApp.external(savedContractAddr, contract.abi)
 
@@ -52,6 +51,9 @@ export class CommentThread extends React.Component {
         }
     }
 
+    /**
+     * Get AragonComments contract address from ACL events
+     */
     async getAragonCommentsAddress() {
         let aclAddr = await observableToPromise(this.props.aragonApp.call('acl'))
         let acl = this.props.aragonApp.external(aclAddr, aclContract.abi)
