@@ -20,7 +20,7 @@ contract HasComments {
         emit SetAragonComments(msg.sender);
     }
 
-    function contractAddr() external view returns (address) {
+    function contractAddress() external view returns (address) {
         return this;
     }
          

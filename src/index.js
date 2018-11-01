@@ -65,7 +65,7 @@ export class CommentThread extends React.Component {
     }
 
     async getContractAddress() {
-      return observableToPromise(this.props.aragonApp.getContractAddr())
+      return observableToPromise(this.props.aragonApp.call('contractAddress'))
     }
 
     updateThread = async () => {
