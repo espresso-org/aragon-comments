@@ -29,6 +29,10 @@ contract HasComments {
         aragonComments.postComment(comment, msg.sender);
     }
 
+    function postComment(string comment, string threadName) public {
+        aragonComments.postComment(comment, msg.sender);
+    }    
+
     function kernel() public view returns (IKernel);
 
 }
