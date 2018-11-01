@@ -14,7 +14,7 @@ contract AragonComments is AragonApp {
         string message;
     }
 
-    mapping (address => mapping (string => Comment[])) public comments; // app => threadName => comments
+    mapping (address => mapping (bytes32 => Comment[])) public comments; // app => threadName => comments
 
     function initialize() onlyInit public {
         initialized();
@@ -25,7 +25,7 @@ contract AragonComments is AragonApp {
     }
 
     function postComment(string _comment, address _author, string _threadName) public {
-        comments[msg.sender][_threadName].push(Comment({
+        comments[msg.sender][keccak256(_threadName)].push(Comment({
             author: _author,
             date: now,
             message: _comment
@@ -38,7 +38,7 @@ contract AragonComments is AragonApp {
     }
 
     function getComment(address _app, uint256 _index, string _threadName) public returns (address author, uint256 date, string message) {
-        Comment storage comment = comments[_app][_threadName][_index];
+        Comment storage comment = comments[_app][keccak256(_threadName)][_index];
 
         author = comment.author;
         date = comment.date;
@@ -51,7 +51,7 @@ contract AragonComments is AragonApp {
 
     
     function commentsCount(address _app, string _threadName) public view returns (uint256) {
-        return comments[_app][_threadName].length;
+        return comments[_app][keccak256(_threadName)].length;
     }
 
 
