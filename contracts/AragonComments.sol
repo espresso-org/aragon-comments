@@ -33,11 +33,13 @@ contract AragonComments is AragonApp {
         emit NewComment(msg.sender, 42, _comment);
     }    
 
+    /*
+     * TODO: Uncomment when bug https://github.com/aragon/aragon.js/issues/186 is fixed.
     function getComment(address _app, uint256 _index) external returns (address author, uint256 date, string message) {
         return getComment(_app, _index, "");
-    }
+    }*/
 
-    function getComment(address _app, uint256 _index, string _threadName) public returns (address author, uint256 date, string message) {
+    function getComment(address _app, uint256 _index, string _threadName) public view returns (address author, uint256 date, string message) {
         Comment storage comment = comments[_app][keccak256(_threadName)][_index];
 
         author = comment.author;
@@ -45,9 +47,11 @@ contract AragonComments is AragonApp {
         message = comment.message;        
     }    
 
+    /*
+     * TODO: Uncomment when bug https://github.com/aragon/aragon.js/issues/186 is fixed.
     function commentsCount(address _app) external view returns (uint256) {
         return commentsCount(_app, "");
-    }
+    }*/
 
     
     function commentsCount(address _app, string _threadName) public view returns (uint256) {

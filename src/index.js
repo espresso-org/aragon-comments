@@ -69,11 +69,13 @@ export class CommentThread extends React.Component {
     }
 
     updateThread = async () => {
-      const commentsCount = await observableToPromise(this.contract.commentsCount(this.hasCommentsAppAddress))
+      const commentsCount = await observableToPromise(this.contract.commentsCount(this.hasCommentsAppAddress, ''))
 
       let comments = []
 
-      for (let i = 0; i < commentsCount; i++) { comments.push(await observableToPromise(this.contract.comments(this.hasCommentsAppAddress, i))) }
+      for (let i = 0; i < commentsCount; i++) {
+        comments.push(await observableToPromise(this.contract.getComment(this.hasCommentsAppAddress, i, '')))
+      }
 
       this.setState({ comments })
     }
