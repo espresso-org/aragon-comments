@@ -14,14 +14,14 @@ contract AragonComments is AragonApp {
         string message;
     }
 
-    Comment[] public comments;
+    mapping (address => Comment[]) public comments;
 
     function initialize() onlyInit public {
         initialized();
     }
 
     function postComment(string _comment, address _author) public {
-        comments.push(Comment({
+        comments[msg.sender].push(Comment({
             author: _author,
             date: now,
             message: _comment
@@ -29,8 +29,8 @@ contract AragonComments is AragonApp {
         emit NewComment(msg.sender, 42, _comment);
     }
 
-    function commentsCount() external view returns (uint256) {
-        return comments.length;
+    function commentsCount(address _app) external view returns (uint256) {
+        return comments[_app].length;
     }
 
 

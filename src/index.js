@@ -8,122 +8,119 @@ import { keccak256 } from 'js-sha3'
 const COMMENT_ROLE = `0x${keccak256('COMMENT_ROLE')}`
 const EMPTY_ADDRESS = '0x0000000000000000000000000000000000000000'
 
-
 export class CommentThread extends React.Component {
-
-    state = { test: '', currentComment: '', comments: [], isActivated: true }
+    state = { currentComment: '', comments: [], isActivated: true }
     contract
 
     constructor(props) {
-        super(props)
-        this.init()
-        window.comments = this
+      super(props)
+      this.init()
+      window.comments = this
     }
 
     async init() {
-        await wait(500)
+      await wait(500)
 
-        if (this.props.aragonApp) {
-            await this.initializeContract()
-            
-            this.props.aragonApp.events()
-                .filter(e => e.event === 'SetAragonComments')
-                .subscribe(e => this.initializeContract())
-        }
+      if (this.props.aragonApp) {
+        this.hasCommentsAppAddress = await this.getContractAddress()
+        await this.initializeContract()
+
+        this.props.aragonApp.events()
+          .filter(e => e.event === 'SetAragonComments')
+          .subscribe(e => this.initializeContract())
+      }
     }
 
     initializeContract = async () => {
-        const savedContractAddr = await observableToPromise(this.props.aragonApp.call('aragonComments'))
-        if (savedContractAddr !== EMPTY_ADDRESS) {
-            this.contract = this.props.aragonApp.external(savedContractAddr, contract.abi)
+      const savedContractAddr = await observableToPromise(this.props.aragonApp.call('aragonComments'))
+      if (savedContractAddr !== EMPTY_ADDRESS) {
+        this.contract = this.props.aragonApp.external(savedContractAddr, contract.abi)
 
-            this.contract.events().subscribe(event => {
-                this.updateThread()
-            })
+        this.contract.events().subscribe(event => {
+          this.updateThread()
+        })
 
-            this.updateThread()
+        this.updateThread()
 
-            this.setState({ isActivated: true })
-        }
-        else {
-            this.setState({ isActivated: false })
-            this.contractAddress = await this.getAragonCommentsAddress()
-        }
+        this.setState({ isActivated: true })
+      } else {
+        this.setState({ isActivated: false })
+        this.contractAddress = await this.getAragonCommentsAddress()
+      }
     }
 
     /**
      * Get AragonComments contract address from ACL events
      */
     async getAragonCommentsAddress() {
-        let aclAddr = await observableToPromise(this.props.aragonApp.call('acl'))
-        let acl = this.props.aragonApp.external(aclAddr, aclContract.abi)
+      let aclAddr = await observableToPromise(this.props.aragonApp.call('acl'))
+      let acl = this.props.aragonApp.external(aclAddr, aclContract.abi)
 
-        return observableToPromise(
-           acl.events()
-            .filter(e => e.returnValues.role === COMMENT_ROLE)
-            .map(e => e.returnValues.app)
-            .first()
-        )
+      return observableToPromise(
+        acl.events()
+          .filter(e => e.returnValues.role === COMMENT_ROLE)
+          .map(e => e.returnValues.app)
+          .first()
+      )
+    }
+
+    async getContractAddress() {
+      return observableToPromise(this.props.aragonApp.getContractAddr())
     }
 
     updateThread = async () => {
-        const commentsCount = await observableToPromise(this.contract.commentsCount())
+      const commentsCount = await observableToPromise(this.contract.commentsCount(this.hasCommentsAppAddress))
 
-        let comments = []
-        
-        for (let i = 0; i < commentsCount; i++)
-            comments.push(await observableToPromise(this.contract.comments(i)))
+      let comments = []
 
-        this.setState( { comments })
+      for (let i = 0; i < commentsCount; i++) { comments.push(await observableToPromise(this.contract.comments(this.hasCommentsAppAddress, i))) }
+
+      this.setState({ comments })
     }
 
     activateComments = () => {
-        this.props.aragonApp.setAragonComments(this.contractAddress)
+      this.props.aragonApp.setAragonComments(this.contractAddress)
     }
 
     postComment = async () => {
-        this.props.aragonApp.postComment(this.state.currentComment).subscribe(console.log)
-        this.setState({ currentComment: '' })
+      this.props.aragonApp.postComment(this.state.currentComment).subscribe(console.log)
+      this.setState({ currentComment: '' })
     }
 
     render() {
-        return (
-            <Main>
-                { this.state.isActivated ? 
-                    <div>
-                        {this.state.comments.map((comment, i) => 
-                            <Comment>{comment.message}</Comment>
-                        )}
-                        <br /><br />
-                        <InputBox 
-                            type="text" 
-                            value={this.state.currentComment} 
-                            onChange={e => this.setState({ currentComment: e.target.value })} 
-                        />
-                        <Button onClick={this.postComment}>Send</Button>
-                    </div>
-                    :                
-                    <div style={{ textAlign: 'center' }}>
+      return (
+        <Main>
+          { this.state.isActivated
+            ? <div>
+              {this.state.comments.map((comment, i) =>
+                <Comment>{comment.message}</Comment>
+              )}
+              <br /><br />
+              <InputBox
+                type='text'
+                value={this.state.currentComment}
+                onChange={e => this.setState({ currentComment: e.target.value })}
+              />
+              <Button onClick={this.postComment}>Send</Button>
+            </div>
+            : <div style={{ textAlign: 'center' }}>
                         Comments are not active
-                        <Button onClick={this.activateComments}>Activate Comments</Button>
-                    </div>
-                }
-            </Main>
-        )
+              <Button onClick={this.activateComments}>Activate Comments</Button>
+            </div>
+          }
+        </Main>
+      )
     }
-
 }
-
 
 function observableToPromise(observable) {
-    return new Promise(resolve => {
-        observable.subscribe(resolve)
-    })
+  return new Promise(resolve => {
+    observable.subscribe(resolve)
+  })
 }
 
-
 function wait(ms) {
-    return new Promise(res => setTimeout(res, ms))
+  return new Promise(res => setTimeout(res, ms))
 }
 
 const Main = styled.div`

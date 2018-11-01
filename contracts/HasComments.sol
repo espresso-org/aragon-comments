@@ -18,7 +18,11 @@ contract HasComments {
     function setAragonComments(address _aragonComments) public {
         aragonComments = AragonComments(_aragonComments);
         emit SetAragonComments(msg.sender);
-    }    
+    }
+
+    function contractAddr() external view returns (address) {
+        return this;
+    }
          
 
     function postComment(string comment) public {
