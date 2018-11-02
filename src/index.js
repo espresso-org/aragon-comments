@@ -5,7 +5,7 @@ import { Button } from '@aragon/ui'
 import aclContract from './acl-contract'
 import { keccak256 } from 'js-sha3'
 import PropTypes from 'prop-types'
-import Blockies from 'react-blockies'
+import { Comment } from './components/comment'
 
 const COMMENT_ROLE = `0x${keccak256('COMMENT_ROLE')}`
 const EMPTY_ADDRESS = '0x0000000000000000000000000000000000000000'
@@ -126,23 +126,6 @@ export class CommentThread extends React.Component {
     }
 }
 
-const Comment = ({ author, message, date }) =>
-  <CommentMain>
-    <Author>
-      <Blockies
-        seed={author}
-        size={10}
-        scale={3}
-        color='#dfe'
-        bgColor='#ffe'
-        spotColor='#abc'
-      />
-    </Author>
-    <Bubble>
-      {message}
-    </Bubble>
-  </CommentMain>
-
 function observableToPromise(observable) {
   return new Promise(resolve => {
     observable.subscribe(resolve)
@@ -159,31 +142,6 @@ const Main = styled.div`
     border-radius: 4px;
     padding: 10px;  
     margin-left: 10px;  
-`
-
-const CommentMain = styled.div`
-    display: flex;
-    align-items: center;
-    margin-bottom: 8px;
-`
-
-const Author = styled.div`
-    display: inline-block;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    overflow: hidden;
-    background: white;    
-    margin-right: 6px;
-`
-
-const Bubble = styled.div`
-    background: white;
-    border-radius: 4px;
-    border: 1px solid #eee;
-    padding: 10px;
-    width: auto;
-    flex-grow: 100;
 `
 
 const InputBox = styled.input`
