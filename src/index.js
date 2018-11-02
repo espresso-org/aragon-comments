@@ -117,13 +117,15 @@ export class CommentThread extends React.Component {
                 <Comment {...comment} />
               )}
               <br /><br />
-              <InputBox
-                type='text'
-                value={this.state.currentComment}
-                onChange={e => this.setState({ currentComment: e.target.value })}
-                placeholder='Enter a comment...'
-              />
-              <Button onClick={this.postComment}>Send</Button>
+              <InputContainer>
+                <InputBox
+                  type='text'
+                  value={this.state.currentComment}
+                  onChange={e => this.setState({ currentComment: e.target.value })}
+                  placeholder='Enter a comment...'
+                />
+                <SendButton onClick={this.postComment}>Send</SendButton>
+              </InputContainer>
             </div>
             : <div style={{ textAlign: 'center' }}>
                         Comments are not enabled
@@ -153,9 +155,21 @@ const Main = styled.div`
     margin-left: 10px;  
 `
 
+const InputContainer = styled.div`
+  display: flex;
+`
+
 const InputBox = styled.input`
+  flex-grow: 100;
     width: 236px;
     height: 43px;
     border: none;
     padding-left: 6px;
+`
+
+const SendButton = styled(Button)`
+  width: 62px;
+  min-width: 62px;
+  max-width: 62px;
+  height: 41px;
 `
