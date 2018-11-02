@@ -16,6 +16,10 @@ export class CommentThread extends React.Component {
       thread: PropTypes.string
     }
 
+    static defaultProps = {
+      thread: ''
+    }
+
     state = { currentComment: '', comments: [], isActivated: true }
     contract
 
@@ -92,7 +96,7 @@ export class CommentThread extends React.Component {
     }
 
     postComment = async () => {
-      this.props.aragonApp.postComment(this.state.currentComment).subscribe(console.log)
+      this.props.aragonApp.postComment(this.state.currentComment, this.props.thread).subscribe(console.log)
       this.setState({ currentComment: '' })
     }
 
@@ -158,11 +162,19 @@ const Main = styled.div`
 `
 
 const CommentMain = styled.div`
-
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
 `
 
 const Author = styled.div`
     display: inline-block;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: white;    
+    margin-right: 6px;
 `
 
 const Bubble = styled.div`
@@ -170,9 +182,8 @@ const Bubble = styled.div`
     border-radius: 4px;
     border: 1px solid #eee;
     padding: 10px;
-    margin-bottom: 8px;
-    width: 100px;
-    display: inline-block;
+    width: auto;
+    flex-grow: 100;
 `
 
 const InputBox = styled.input`
