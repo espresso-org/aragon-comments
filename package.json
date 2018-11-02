@@ -21,14 +21,16 @@
     "deploy": "gh-pages -d example/build"
   },
   "dependencies": {
-    "@aragon/os": "4.0.0-beta.3"
+    "@aragon/os": "4.0.0-beta.3",
+    "prop-types": "^15.6.2",
+    "react-blockies": "^1.4.0"
   },
   "peerDependencies": {
     "prop-types": "^15.5.4",
     "react": "^15.0.0 || ^16.0.0",
     "react-dom": "^15.0.0 || ^16.0.0"
   },
-  "devDependencies": {    
+  "devDependencies": {
     "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.5",
     "babel-plugin-external-helpers": "^6.22.0",

@@ -4,11 +4,18 @@ import contract from './contrat'
 import { Button } from '@aragon/ui'
 import aclContract from './acl-contract'
 import { keccak256 } from 'js-sha3'
+import PropTypes from 'prop-types'
+import Blockies from 'react-blockies'
 
 const COMMENT_ROLE = `0x${keccak256('COMMENT_ROLE')}`
 const EMPTY_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 export class CommentThread extends React.Component {
+    static propTypes = {
+      aragonApp: PropTypes.object,
+      thread: PropTypes.string
+    }
+
     state = { currentComment: '', comments: [], isActivated: true }
     contract
 
@@ -69,12 +76,12 @@ export class CommentThread extends React.Component {
     }
 
     updateThread = async () => {
-      const commentsCount = await observableToPromise(this.contract.commentsCount(this.hasCommentsAppAddress, ''))
+      const commentsCount = await observableToPromise(this.contract.commentsCount(this.hasCommentsAppAddress, this.props.thread))
 
       let comments = []
 
       for (let i = 0; i < commentsCount; i++) {
-        comments.push(await observableToPromise(this.contract.getComment(this.hasCommentsAppAddress, i, '')))
+        comments.push(await observableToPromise(this.contract.getComment(this.hasCommentsAppAddress, i, this.props.thread)))
       }
 
       this.setState({ comments })
@@ -95,7 +102,7 @@ export class CommentThread extends React.Component {
           { this.state.isActivated
             ? <div>
               {this.state.comments.map((comment, i) =>
-                <Comment>{comment.message}</Comment>
+                <Comment {...comment} />
               )}
               <br /><br />
               <InputBox
@@ -115,6 +122,21 @@ export class CommentThread extends React.Component {
     }
 }
 
+const Comment = ({ author, message, date }) =>
+  <CommentMain>
+    <Author>
+      <Blockies
+        seed={author}
+        size={10}
+        scale={3}
+        color='#dfe'
+        bgColor='#ffe'
+        spotColor='#abc'
+      />
+    </Author>
+    {comment.message}
+  </CommentMain>
+
 function observableToPromise(observable) {
   return new Promise(resolve => {
     observable.subscribe(resolve)
@@ -133,12 +155,22 @@ const Main = styled.div`
     margin-left: 10px;  
 `
 
-const Comment = styled.div`
+const CommentMain = styled.div`
+
+`
+
+const Author = styled.div`
+    display: inline-block;
+`
+
+const Bubble = styled.div`
     background: white;
     border-radius: 4px;
     border: 1px solid #eee;
     padding: 10px;
     margin-bottom: 8px;
+    width: 100px;
+    display: inline-block;
 `
 
 const InputBox = styled.input`
