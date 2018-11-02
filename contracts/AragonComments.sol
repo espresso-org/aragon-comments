@@ -22,12 +22,16 @@ contract AragonComments is AragonApp {
 
     function postComment(string _comment, address _author) 
         public 
-        auth("COMMENT_ROLE")
+        
     {
         postComment(_comment, _author, "");
     }
 
-    function postComment(string _comment, address _author, string _threadName) public {
+    function postComment(string _comment, address _author, string _threadName) 
+        public 
+        auth(COMMENT_ROLE)
+    {
+        
         comments[msg.sender][keccak256(_threadName)].push(Comment({
             author: _author,
             date: now,
