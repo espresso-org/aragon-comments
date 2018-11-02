@@ -134,7 +134,9 @@ const Comment = ({ author, message, date }) =>
         spotColor='#abc'
       />
     </Author>
-    {comment.message}
+    <Bubble>
+      {message}
+    </Bubble>
   </CommentMain>
 
 function observableToPromise(observable) {
