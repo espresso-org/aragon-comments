@@ -28,6 +28,8 @@ const CommentMain = styled.div`
 const Author = styled.div`
     display: inline-block;
     width: 32px;
+    min-width: 32px;
+    max-width: 32px;    
     height: 32px;
     border-radius: 50%;
     overflow: hidden;
@@ -42,4 +44,30 @@ const Bubble = styled.div`
     padding: 10px;
     width: auto;
     flex-grow: 100;
+    position: relative;
+
+    :after, :before {
+      right: 100%;
+      top: 50%;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      position: absolute;
+      pointer-events: none;
+    }
+
+    :after {
+      border-color: rgba(255, 255, 255, 0);
+      border-right-color: #ffffff;
+      border-width: 4px;
+      margin-top: -4px;
+    }
+    
+    :before {
+      border-color: rgba(194, 225, 245, 0);
+      border-right-color: #c2e1f5;
+      border-width: 5px;
+      margin-top: -5px;
+    }
 `
