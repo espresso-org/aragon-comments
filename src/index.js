@@ -11,11 +11,6 @@ const COMMENT_ROLE = `0x${keccak256('COMMENT_ROLE')}`
 const EMPTY_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 export class CommentThread extends React.Component {
-    static propTypes = {
-      aragonApp: PropTypes.object,
-      thread: PropTypes.string
-    }
-
     static defaultProps = {
       thread: ''
     }
@@ -115,7 +110,7 @@ export class CommentThread extends React.Component {
 
     render() {
       return (
-        <Main>
+        <Main {...this.props}>
           { this.state.isEnabled
             ? <div>
               {this.state.comments.map((comment, i) =>
