@@ -47,11 +47,24 @@ export class CommentThread extends React.Component {
       if (savedContractAddr !== EMPTY_ADDRESS) {
         this.contract = this.props.aragonApp.external(savedContractAddr, contract.abi)
 
-        this.contract.events().subscribe(event => {
+        const events = this.contract.events()
+
+        events.subscribe(event => {
+          console.log('event', event)
           this.updateThread()
         })
 
-        this.updateThread()
+        events
+          .filter(e => e.event === 'NewComment')
+          .filter(e => e.returnValues.app === this.hasCommentsAppAddress)
+          .filter(e => e.returnValues.threadName === this.props.thread)
+          .subscribe(e => {
+            if (e.returnValues.message === this.state.currentComment) {
+              this.setState({ currentComment: '' })
+            }
+
+            this.updateThread()
+          })
 
         this.setState({ isEnabled: true })
       } else {
@@ -97,7 +110,7 @@ export class CommentThread extends React.Component {
 
     postComment = async () => {
       this.props.aragonApp.postComment(this.state.currentComment, this.props.thread).subscribe(console.log)
-      this.setState({ currentComment: '' })
+      //      this.setState({ currentComment: '' })
     }
 
     render() {
