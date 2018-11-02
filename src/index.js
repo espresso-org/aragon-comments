@@ -20,7 +20,7 @@ export class CommentThread extends React.Component {
       thread: ''
     }
 
-    state = { currentComment: '', comments: [], isActivated: true }
+    state = { currentComment: '', comments: [], isEnabled: true }
     contract
 
     constructor(props) {
@@ -53,9 +53,9 @@ export class CommentThread extends React.Component {
 
         this.updateThread()
 
-        this.setState({ isActivated: true })
+        this.setState({ isEnabled: true })
       } else {
-        this.setState({ isActivated: false })
+        this.setState({ isEnabled: false })
         this.contractAddress = await this.getAragonCommentsAddress()
       }
     }
@@ -103,7 +103,7 @@ export class CommentThread extends React.Component {
     render() {
       return (
         <Main>
-          { this.state.isActivated
+          { this.state.isEnabled
             ? <div>
               {this.state.comments.map((comment, i) =>
                 <Comment {...comment} />
@@ -117,8 +117,8 @@ export class CommentThread extends React.Component {
               <Button onClick={this.postComment}>Send</Button>
             </div>
             : <div style={{ textAlign: 'center' }}>
-                        Comments are not active
-              <Button onClick={this.activateComments}>Activate Comments</Button>
+                        Comments are not enabled
+              <Button onClick={this.activateComments}>Enable Comments</Button>
             </div>
           }
         </Main>
