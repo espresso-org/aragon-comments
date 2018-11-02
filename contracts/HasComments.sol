@@ -24,14 +24,15 @@ contract HasComments {
         return this;
     }
          
-
+    /*
     function postComment(string comment) public {
         aragonComments.postComment(comment, msg.sender);
-    }
+    }*/
 
+    
     function postComment(string comment, string threadName) public {
         aragonComments.postComment(comment, msg.sender);
-    }    
+    }
 
     function kernel() public view returns (IKernel);
 

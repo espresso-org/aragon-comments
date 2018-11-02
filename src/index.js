@@ -4,12 +4,23 @@ import contract from './contrat'
 import { Button } from '@aragon/ui'
 import aclContract from './acl-contract'
 import { keccak256 } from 'js-sha3'
+import PropTypes from 'prop-types'
+import { Comment } from './components/comment'
 
 const COMMENT_ROLE = `0x${keccak256('COMMENT_ROLE')}`
 const EMPTY_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 export class CommentThread extends React.Component {
-    state = { currentComment: '', comments: [], isActivated: true }
+    static propTypes = {
+      aragonApp: PropTypes.object,
+      thread: PropTypes.string
+    }
+
+    static defaultProps = {
+      thread: ''
+    }
+
+    state = { currentComment: '', comments: [], isEnabled: true }
     contract
 
     constructor(props) {
@@ -42,9 +53,9 @@ export class CommentThread extends React.Component {
 
         this.updateThread()
 
-        this.setState({ isActivated: true })
+        this.setState({ isEnabled: true })
       } else {
-        this.setState({ isActivated: false })
+        this.setState({ isEnabled: false })
         this.contractAddress = await this.getAragonCommentsAddress()
       }
     }
@@ -69,12 +80,12 @@ export class CommentThread extends React.Component {
     }
 
     updateThread = async () => {
-      const commentsCount = await observableToPromise(this.contract.commentsCount(this.hasCommentsAppAddress, ''))
+      const commentsCount = await observableToPromise(this.contract.commentsCount(this.hasCommentsAppAddress, this.props.thread))
 
       let comments = []
 
       for (let i = 0; i < commentsCount; i++) {
-        comments.push(await observableToPromise(this.contract.getComment(this.hasCommentsAppAddress, i, '')))
+        comments.push(await observableToPromise(this.contract.getComment(this.hasCommentsAppAddress, i, this.props.thread)))
       }
 
       this.setState({ comments })
@@ -85,17 +96,17 @@ export class CommentThread extends React.Component {
     }
 
     postComment = async () => {
-      this.props.aragonApp.postComment(this.state.currentComment).subscribe(console.log)
+      this.props.aragonApp.postComment(this.state.currentComment, this.props.thread).subscribe(console.log)
       this.setState({ currentComment: '' })
     }
 
     render() {
       return (
         <Main>
-          { this.state.isActivated
+          { this.state.isEnabled
             ? <div>
               {this.state.comments.map((comment, i) =>
-                <Comment>{comment.message}</Comment>
+                <Comment {...comment} />
               )}
               <br /><br />
               <InputBox
@@ -106,8 +117,8 @@ export class CommentThread extends React.Component {
               <Button onClick={this.postComment}>Send</Button>
             </div>
             : <div style={{ textAlign: 'center' }}>
-                        Comments are not active
-              <Button onClick={this.activateComments}>Activate Comments</Button>
+                        Comments are not enabled
+              <Button onClick={this.activateComments}>Enable Comments</Button>
             </div>
           }
         </Main>
@@ -131,14 +142,6 @@ const Main = styled.div`
     border-radius: 4px;
     padding: 10px;  
     margin-left: 10px;  
-`
-
-const Comment = styled.div`
-    background: white;
-    border-radius: 4px;
-    border: 1px solid #eee;
-    padding: 10px;
-    margin-bottom: 8px;
 `
 
 const InputBox = styled.input`
