@@ -20,7 +20,10 @@ contract AragonComments is AragonApp {
         initialized();
     }
 
-    function postComment(string _comment, address _author) public {
+    function postComment(string _comment, address _author) 
+        public 
+        auth("COMMENT_ROLE")
+    {
         postComment(_comment, _author, "");
     }
 

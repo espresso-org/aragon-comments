@@ -113,6 +113,7 @@ export class CommentThread extends React.Component {
                 type='text'
                 value={this.state.currentComment}
                 onChange={e => this.setState({ currentComment: e.target.value })}
+                placeholder='Enter a comment...'
               />
               <Button onClick={this.postComment}>Send</Button>
             </div>
@@ -148,4 +149,5 @@ const InputBox = styled.input`
     width: 236px;
     height: 43px;
     border: none;
+    padding-left: 6px;
 `
