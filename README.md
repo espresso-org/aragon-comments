@@ -1,7 +1,6 @@
-# aragon-comments
+# Aragon Comments
 
-> Add comments feature to any Aragon app
-
+`Aragon Comments` offers an easy way for developers to integrate discussion threads to their [Aragon]() app. 
 
 ## Install
 
@@ -10,6 +9,7 @@ npm install --save @espresso-org/aragon-comments
 ```
 
 ## Usage
+
 
 
 
