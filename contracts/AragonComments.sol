@@ -6,7 +6,7 @@ contract AragonComments is AragonApp {
 
     bytes32 constant public COMMENT_ROLE = keccak256("COMMENT_ROLE");
 
-    event NewComment(address indexed entity, uint t, string message);
+    event NewComment(address indexed app, string message, string threadName);
 
     struct Comment {
         address author;
@@ -20,9 +20,7 @@ contract AragonComments is AragonApp {
         initialized();
     }
 
-    function postComment(string _comment, address _author) 
-        public 
-        
+    function postComment(string _comment, address _author) public        
     {
         postComment(_comment, _author, "");
     }
@@ -37,7 +35,7 @@ contract AragonComments is AragonApp {
             date: now,
             message: _comment
         }));
-        emit NewComment(msg.sender, 42, _comment);
+        emit NewComment(msg.sender, _comment, _threadName);
     }    
 
     /*

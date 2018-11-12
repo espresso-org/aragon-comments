@@ -11,11 +11,6 @@ const COMMENT_ROLE = `0x${keccak256('COMMENT_ROLE')}`
 const EMPTY_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 export class CommentThread extends React.Component {
-    static propTypes = {
-      aragonApp: PropTypes.object,
-      thread: PropTypes.string
-    }
-
     static defaultProps = {
       thread: ''
     }
@@ -47,11 +42,24 @@ export class CommentThread extends React.Component {
       if (savedContractAddr !== EMPTY_ADDRESS) {
         this.contract = this.props.aragonApp.external(savedContractAddr, contract.abi)
 
-        this.contract.events().subscribe(event => {
+        const events = this.contract.events()
+
+        events.subscribe(event => {
+          console.log('event', event)
           this.updateThread()
         })
 
-        this.updateThread()
+        events
+          .filter(e => e.event === 'NewComment')
+          .filter(e => e.returnValues.app === this.hasCommentsAppAddress)
+          .filter(e => e.returnValues.threadName === this.props.thread)
+          .subscribe(e => {
+            if (e.returnValues.message === this.state.currentComment) {
+              this.setState({ currentComment: '' })
+            }
+
+            this.updateThread()
+          })
 
         this.setState({ isEnabled: true })
       } else {
@@ -97,25 +105,27 @@ export class CommentThread extends React.Component {
 
     postComment = async () => {
       this.props.aragonApp.postComment(this.state.currentComment, this.props.thread).subscribe(console.log)
-      this.setState({ currentComment: '' })
+      //      this.setState({ currentComment: '' })
     }
 
     render() {
       return (
-        <Main>
+        <Main {...this.props}>
           { this.state.isEnabled
             ? <div>
               {this.state.comments.map((comment, i) =>
                 <Comment {...comment} />
               )}
               <br /><br />
-              <InputBox
-                type='text'
-                value={this.state.currentComment}
-                onChange={e => this.setState({ currentComment: e.target.value })}
-                placeholder='Enter a comment...'
-              />
-              <Button onClick={this.postComment}>Send</Button>
+              <InputContainer>
+                <InputBox
+                  type='text'
+                  value={this.state.currentComment}
+                  onChange={e => this.setState({ currentComment: e.target.value })}
+                  placeholder='Enter a comment...'
+                />
+                <SendButton onClick={this.postComment}>Send</SendButton>
+              </InputContainer>
             </div>
             : <div style={{ textAlign: 'center' }}>
                         Comments are not enabled
@@ -145,9 +155,21 @@ const Main = styled.div`
     margin-left: 10px;  
 `
 
+const InputContainer = styled.div`
+  display: flex;
+`
+
 const InputBox = styled.input`
+  flex-grow: 100;
     width: 236px;
     height: 43px;
     border: none;
     padding-left: 6px;
+`
+
+const SendButton = styled(Button)`
+  width: 62px;
+  min-width: 62px;
+  max-width: 62px;
+  height: 41px;
 `
