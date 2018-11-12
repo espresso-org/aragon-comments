@@ -5,7 +5,7 @@ import timestamp from 'unix-timestamp'
 
 export const Comment = ({ author, message, date }) =>
   <CommentMain>
-    <Author>
+    <Author title={author}>
       <Blockies
         seed={author}
         size={10}
