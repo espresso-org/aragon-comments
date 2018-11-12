@@ -52,10 +52,11 @@ class App extends React.Component {
 }
 ```
 
-4. Make sure to install the `Aragon Comments` app
+4. Make sure to install the `Aragon Comments` app to your DAO.
 
 ```bash
 aragon dao install <dao address> aragon-comments
 ```
+
 
 
