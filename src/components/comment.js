@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import Blockies from 'react-blockies'
+import timestamp from 'unix-timestamp'
 
 export const Comment = ({ author, message, date }) =>
   <CommentMain>
@@ -16,6 +17,7 @@ export const Comment = ({ author, message, date }) =>
     </Author>
     <Bubble>
       {message}
+      <Date>{formatDate(parseInt(date))}</Date>
     </Bubble>
   </CommentMain>
 
@@ -35,6 +37,15 @@ const Author = styled.div`
     overflow: hidden;
     background: white;    
     margin-right: 6px;
+`
+
+const Date = styled.div`
+  display: inline-block;
+  position: absolute;
+  right: 8px;
+  bottom: 2px;
+  font-size: 10px;
+  color: #ccc;
 `
 
 const Bubble = styled.div`
@@ -71,3 +82,9 @@ const Bubble = styled.div`
       margin-top: -5px;
     }
 `
+
+function formatDate(unixDate) {
+  const date = timestamp.toDate(unixDate)
+
+  return `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
+}
