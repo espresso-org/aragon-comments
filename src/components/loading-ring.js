@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { theme } from '@aragon/ui'
 
-const LoadingRing = ({ spin, ...props }) => (
+export const LoadingRing = ({ spin, ...props }) => (
   <Main spin={spin} {...props}>
     <Ring spin={spin} />
   </Main>
@@ -42,5 +42,3 @@ const Ring = styled.span`
     border: 1px solid ${theme.accent};
   }
 `
-
-export default LoadingRing

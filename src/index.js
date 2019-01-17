@@ -6,6 +6,7 @@ import aclContract from './acl-contract'
 import { keccak256 } from 'js-sha3'
 import PropTypes from 'prop-types'
 import { Comment } from './components/comment'
+import { LoadingRing } from './components/loading-ring'
 
 const COMMENT_ROLE = `0x${keccak256('COMMENT_ROLE')}`
 const EMPTY_ADDRESS = '0x0000000000000000000000000000000000000000'
@@ -15,7 +16,13 @@ export class CommentThread extends React.Component {
       thread: ''
     }
 
-    state = { currentComment: '', comments: [], isEnabled: true }
+    state = { 
+      currentComment: '', 
+      comments: [], 
+      isEnabled: true,
+      isLoading: true
+    }
+
     contract
 
     constructor(props) {
@@ -61,9 +68,9 @@ export class CommentThread extends React.Component {
             this.updateThread()
           })
 
-        this.setState({ isEnabled: true })
+        this.setState({ isEnabled: true, isLoading: false })
       } else {
-        this.setState({ isEnabled: false })
+        this.setState({ isEnabled: false, isLoading: false })
         this.contractAddress = await this.getAragonCommentsAddress()
       }
     }
@@ -96,7 +103,7 @@ export class CommentThread extends React.Component {
         comments.push(await observableToPromise(this.contract.getComment(this.hasCommentsAppAddress, i, this.props.thread)))
       }
 
-      this.setState({ comments })
+      this.setState({ comments, isLoading: false })
     }
 
     activateComments = () => {
@@ -111,6 +118,9 @@ export class CommentThread extends React.Component {
     render() {
       return (
         <Main {...this.props}>
+          { this.state.isLoading &&
+              <LoadingRing spin={true} />
+          }
           { this.state.isEnabled
             ? <div>
               {this.state.comments.map((comment, i) =>
@@ -167,7 +177,7 @@ const InputBox = styled.input`
     padding-left: 6px;
 `
 
-const SendButton = styled(Button)`
+const SendButton = styled(Button).attrs({ mode: 'strong' })`
   width: 62px;
   min-width: 62px;
   max-width: 62px;
