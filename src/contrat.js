@@ -4460,5 +4460,5 @@ export default {
   },
   'networks': {},
   'schemaVersion': '2.0.1',
-  'updatedAt': '2018-11-02T19:34:07.325Z'
+  'updatedAt': '2018-11-18T02:52:44.074Z'
 }

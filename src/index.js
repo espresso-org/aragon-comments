@@ -46,6 +46,7 @@ export class CommentThread extends React.Component {
 
         events.subscribe(event => {
           console.log('event', event)
+          this.setState({ currentComment: '' })
           this.updateThread()
         })
 
@@ -128,7 +129,7 @@ export class CommentThread extends React.Component {
               </InputContainer>
             </div>
             : <div style={{ textAlign: 'center' }}>
-                        Comments are not enabled
+                Comments are not enabled <br />
               <Button onClick={this.activateComments}>Enable Comments</Button>
             </div>
           }
@@ -160,7 +161,8 @@ const InputContainer = styled.div`
 `
 
 const InputBox = styled.input`
-  flex-grow: 100;
+    outline: none;
+    flex-grow: 100;
     width: 236px;
     height: 43px;
     border: none;
