@@ -132,7 +132,7 @@ export class CommentThread extends React.Component {
                   type='text'
                   value={this.state.currentComment}
                   onChange={e => this.setState({ currentComment: e.target.value })}
-                  placeholder='Enter a comment...'
+                  placeholder='Enter a comment'
                 />
                 <SendButton onClick={this.postComment}>Send</SendButton>
               </InputContainer>
