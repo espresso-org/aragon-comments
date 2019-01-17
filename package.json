@@ -1,9 +1,9 @@
 {
   "name": "@espresso-org/aragon-comments",
-  "version": "1.0.0",
-  "description": "Add comments feature to any Aragon app",
+  "version": "0.0.1",
+  "description": "Add comments to any Aragon app",
   "license": "MIT",
-  "repository": "macor161/aragon-comments",
+  "repository": "@espresso-org/aragon-comments",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "jsnext:main": "dist/index.es.js",
