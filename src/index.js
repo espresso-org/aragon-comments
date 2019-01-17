@@ -25,7 +25,6 @@ export class CommentThread extends React.Component {
     }
 
     async init() {
-      await wait(500)
 
       if (this.props.aragonApp) {
         this.hasCommentsAppAddress = await this.getContractAddress()
@@ -153,7 +152,6 @@ const Main = styled.div`
     border: 1px solid #ddd;
     border-radius: 4px;
     padding: 10px;  
-    margin-left: 10px;  
 `
 
 const InputContainer = styled.div`
