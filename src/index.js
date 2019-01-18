@@ -199,6 +199,8 @@ const InputBox = styled.input`
     border: none;
     padding-left: 6px;
     font-size: 13px;
+    border-radius: 4px;
+    margin-right: 4px;
 `
 
 const SendButton = styled(Button).attrs({ mode: 'strong' })`
