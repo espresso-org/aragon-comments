@@ -68,7 +68,8 @@ export class CommentThread extends React.Component {
             this.updateThread()
           })
 
-        this.setState({ isEnabled: true, isLoading: false })
+        this.setState({ isEnabled: true })
+        this.updateThread()
       } else {
         this.setState({ isEnabled: false, isLoading: false })
         this.contractAddress = await this.getAragonCommentsAddress()
@@ -110,19 +111,25 @@ export class CommentThread extends React.Component {
       this.props.aragonApp.setAragonComments(this.contractAddress)
     }
 
+    onKeyPress = event => {
+        if(event.key === 'Enter')
+          this.postComment()
+        
+    }    
+
     postComment = async () => {
-      this.props.aragonApp.postComment(this.state.currentComment, this.props.thread).subscribe(console.log)
-      //      this.setState({ currentComment: '' })
+      if (this.state.currentComment)
+        this.props.aragonApp.postComment(this.state.currentComment, this.props.thread).subscribe(console.log)
     }
 
     render() {
       return (
         <Main {...this.props}>
           { this.state.isLoading &&
-              <LoadingRing spin={true} />
+              <StyledLoadingRing size={40} />
           }
           { this.state.isEnabled
-            ? <div>
+            ? <Container>
               {this.state.comments.map((comment, i) =>
                 <Comment {...comment} />
               )}
@@ -132,11 +139,12 @@ export class CommentThread extends React.Component {
                   type='text'
                   value={this.state.currentComment}
                   onChange={e => this.setState({ currentComment: e.target.value })}
+                  onKeyPress={this.onKeyPress}
                   placeholder='Enter a comment'
                 />
                 <SendButton onClick={this.postComment}>Send</SendButton>
               </InputContainer>
-            </div>
+            </Container>
             : <div style={{ textAlign: 'center' }}>
                 Comments are not enabled <br />
               <Button onClick={this.activateComments}>Enable Comments</Button>
@@ -159,13 +167,28 @@ function wait(ms) {
 
 const Main = styled.div`
     width: 320px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 10px;  
+    /*border: 1px solid #ddd;
+    border-radius: 4px;*/
+    padding: 10px;
+    border: none;
+    border-top: 1px solid #ddd !important;
+    border-bottom: 1px solid #ddd !important;      
+`
+
+const Container = styled.div`
+    display: flex;
+    flex-direction: column;
+    min-height: 350px;
+`
+
+const StyledLoadingRing = styled(LoadingRing)`
+  margin-left: 40%;
+  transform: translateX(-100%);
 `
 
 const InputContainer = styled.div`
   display: flex;
+  margin-top: auto;
 `
 
 const InputBox = styled.input`
@@ -175,6 +198,7 @@ const InputBox = styled.input`
     height: 43px;
     border: none;
     padding-left: 6px;
+    font-size: 13px;
 `
 
 const SendButton = styled(Button).attrs({ mode: 'strong' })`
@@ -182,4 +206,5 @@ const SendButton = styled(Button).attrs({ mode: 'strong' })`
   min-width: 62px;
   max-width: 62px;
   height: 41px;
+  margin-top: 1px;
 `
